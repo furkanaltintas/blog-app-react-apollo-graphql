@@ -1,0 +1,22 @@
+# Ortak yapı
+node_modules/
+dist/
+build/
+.env
+
+# Client ve Server özel
+client/node_modules/
+server/node_modules/
+client/dist/
+server/dist/
+
+# Loglar
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
