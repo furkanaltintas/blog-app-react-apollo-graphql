@@ -4,6 +4,13 @@ const { ApolloServer } = require("apollo-server");
 // gql, GraphQL şemasını tanımlamak için kullanılan bir tag fonksiyonudur
 const gql = require("graphql-tag");
 
+const mongoose = require("mongoose");
+
+const MakaleModel = require("./models/MakaleModel");
+
+const DB_URI =
+  "mongodb+srv://furkan:Test1234@cluster0.i3ue8al.mongodb.net/?retryWrites=true&w=majority&appName=blogDB";
+
 // GraphQL şema tanımı yapılır
 // Burada sadece bir Query tipi tanımlanıyor: ilkTip adlı bir alan var ve String (zorunlu) döner
 const typeDefs = gql`
@@ -22,13 +29,9 @@ const typeDefs = gql`
 // makalelerGetir alanı çağrıldığında ne döneceğini belirtiyoruz
 const resolvers = {
   Query: {
-    makalelerGetir() {
-      const makaleler = [
-        { id: 1, baslik: "makale baslik 1", icerik: "makale içerik 1" },
-        { id: 2, baslik: "makale baslik 2", icerik: "makale içerik 2" },
-        { id: 3, baslik: "makale baslik 3", icerik: "makale içerik 3" },
-      ];
-
+    async makalelerGetir() {
+      const makaleler = await MakaleModel.find();
+      console.log(makaleler);
       return makaleler;
     },
   },
@@ -41,26 +44,28 @@ const server = new ApolloServer({
   resolvers,
 });
 
-// Sunucu 5000 portunda dinlenmeye başlar
-// Başarıyla başlarsa, terminale sunucu adresini yazar
-server.listen({ port: 5000 }).then((res) => {
-  console.log(`server ${res.url} adresinde çalışıyor.`);
-});
+// Mongoose modülü ile MongoDB veritabanına bağlantı kuruyoruz
+mongoose
+  .connect(DB_URI, {
+    // MongoDB bağlantı URL'sini yeni parser ile çözümle
+    useNewUrlParser: true,
+    // MongoDB sunucusuna tek bir bağlantı noktası üzerinden bağlan (eski topology yapısından daha stabil)
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    // Bağlantı başarılıysa konsola bilgi mesajı yaz
+    console.log("mongodb bağlantısı başarılı");
 
-/*
-
-
-query {
-  ilkTip
-}
-
-Bu sorgunun yanıtı şöyle olur:
-
-{
-  "data": {
-    "ilkTip": "ilk tip oluşturuldu"
-  }
-}
-
-
-*/
+    // Veritabanı bağlantısından sonra GraphQL server'ı başlat
+    // server.listen metodu GraphQL sunucusunu belirtilen portta çalıştırır
+    return server.listen({ port: 5000 });
+  })
+  .then((res) => {
+    // Sunucu başarıyla başlatıldığında, URL bilgisi konsola yazılır
+    // res.url genelde http://localhost:5000 gibi bir adres döner
+    console.log(`server ${res.url} adresinde çalışıyor.`);
+  })
+  .catch((err) => {
+    // Herhangi bir hata durumunda hatayı konsola yaz
+    console.error("Sunucu başlatılırken hata oluştu:", err);
+  });
