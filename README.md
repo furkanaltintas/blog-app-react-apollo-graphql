@@ -6,6 +6,6 @@
 
 ![1](/client/public/1.jpg)
 &nbsp;&nbsp;
-![2](/client/public/1.jpg)
+![2](/client/public/2.jpg)
 &nbsp;&nbsp;
-![3](/client/public/1.jpg)
+![3](/client/public/3.jpg)
