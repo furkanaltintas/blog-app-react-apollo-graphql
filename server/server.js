@@ -22,6 +22,12 @@ const typeDefs = gql`
 
   type Query {
     makalelerGetir: [Makale]!
+    makaleGetir(id: ID): Makale!
+  }
+
+  type Mutation {
+    makaleOlustur(baslik: String!, icerik: String!): Makale,
+    makaleSil(id: ID): Boolean
   }
 `;
 
@@ -33,6 +39,42 @@ const resolvers = {
       const makaleler = await MakaleModel.find();
       console.log(makaleler);
       return makaleler;
+    },
+    async makaleGetir(parent, args) {
+      try {
+        const { id } = args;
+        return await MakaleModel.findById(id);
+      } catch (error) {
+        throw new error();
+      }
+    },
+  },
+  Mutation: {
+    makaleOlustur: async (parent, args) => {
+      try {
+        const existing = await MakaleModel.findOne({ baslik: args.baslik });
+        if (existing) throw new Error("Bu başlıkta zaten bir makale var");
+
+        const makale = {
+          baslik: args.baslik,
+          icerik: args.icerik,
+        };
+
+        return await MakaleModel.create(makale);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    makaleSil: async (_, {id}) => {
+      try {
+        const existing = await MakaleModel.findById(id);
+        if (!existing) throw new Error("Makale bulunamadı");
+
+        await MakaleModel.findByIdAndDelete(id);
+        return true;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
 };

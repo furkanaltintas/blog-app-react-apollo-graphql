@@ -1,0 +1,58 @@
+.article-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 30px;
+}
+
+.article-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.article-card h2 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  color: #2c3e50;
+  transition: color 0.2s ease;
+  /* Hover etkisine hazırlık */
+}
+
+.article-card p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.article-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.article-card a:hover h2 {
+  color: #007bff;
+  transition: color 0.2s ease 0.1s;
+  /* 0.1s gecikme ile 0.1s'lik geçiş */
+}
+
+.article-empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  text-align: center;
+}
+
+.article-empty {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #666;
+}
