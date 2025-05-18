@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const MakaleModel = require("./models/MakaleModel");
 
 const DB_URI =
-  "mongodb+srv://furkan:Test1234@cluster0.i3ue8al.mongodb.net/?retryWrites=true&w=majority&appName=blogDB";
+  "server";
 
 // GraphQL şema tanımı yapılır
 // Burada sadece bir Query tipi tanımlanıyor: ilkTip adlı bir alan var ve String (zorunlu) döner
